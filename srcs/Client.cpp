@@ -30,7 +30,7 @@ bool  Client::connection(const char* address) {
 
 const std::string transMessage(const std::string& msg) {
   if (msg == "case 1") {
-    return "GET / HTTP/1.1\r\n\r\n\r\n";
+    return "GET / HTTP/1.1\r\n\r\n";
   } else if (msg == "case 2") {
     return "GET / HTTP/1.1\r\nHost: www.example.com\r\nConnection: keep-alive\r\n\r\n";
   }
