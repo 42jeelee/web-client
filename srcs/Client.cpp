@@ -28,11 +28,25 @@ bool  Client::connection(const char* address) {
   return true;
 }
 
+const char* case_ok[] = {
+  "GET / HTTP/1.1\r\n\r\n",
+  "GET / HTTP/1.1\n\n",
+  "GET / HTTP/1.1\n\r\n",
+  "GET / HTTP/1.1\r\n\n",
+  "GET /index.html HTTP/1.1\r\n\n",
+  "GET / HTTP/1.1\r\nConTent-Length: 4\n\n",
+  "GET / HTTP/1.1\r\nConTent-Length: 4, 4 , , \n\n",
+  "GET / HTTP/1.1\r\nConTent-Length: 4, 4 , , 4\n\n",
+  "GET / HTTP/1.1\r\nConTent-Length: 4, 4 ,\nHost: webserv\n\n",
+  "POST /submit-data HTTP/1.1\nHost: www.example.com\nContent-Type: application/x-www-form-urlencoded\nContent-Length: 23\n\n",
+  "GET / HTTP/1.1\nHost: www.example.com\nConnection: keep-alive\n\n",
+  "GET / HTTP/1.1\nHost: www.example.com\nConTent-Length: 4, 4 ,\nConnection: keep-alive\n\n",
+};
+
 const std::string transMessage(const std::string& msg) {
-  if (msg == "case 1") {
-    return "GET / HTTP/1.1\r\n\r\n";
-  } else if (msg == "case 2") {
-    return "GET / HTTP/1.1\r\nHost: www.example.com\r\nConnection: keep-alive\r\n\r\n";
+  if (msg[0] == ':') {
+    int idx = atoi((msg.substr(1)).c_str());
+    return case_ok[idx];
   }
   std::string changeMessage(msg);
   size_t      idx;
