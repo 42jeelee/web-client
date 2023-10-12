@@ -53,6 +53,9 @@ const std::string transMessage(const std::string& msg) {
   while ((idx = changeMessage.find("\\r\\n")) != std::string::npos) {
     changeMessage.replace(idx, 4, "\r\n");
   }
+  while ((idx = changeMessage.find("\\n")) != std::string::npos) {
+    changeMessage.replace(idx, 2, "\n");
+  }
   return changeMessage;
 }
 
