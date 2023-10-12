@@ -15,7 +15,9 @@ const unsigned int& Client::getPort(void) const { return _port; }
 const char*         Client::getBuff(void) const { return _buff; }
 
 bool  Client::connection(const char* address) {
-  if (inet_pton(AF_INET, address, &(_serv_addr.sin_addr)) <= 0) {
+  std::string addr(address);
+  if (addr == "localhost") addr = "127.0.0.1";
+  if (inet_pton(AF_INET, addr.c_str(), &(_serv_addr.sin_addr)) <= 0) {
     std::cerr << "Connection Error: address not supported." << std::endl;
     return false;
   }
@@ -28,11 +30,16 @@ bool  Client::connection(const char* address) {
 
 const std::string transMessage(const std::string& msg) {
   if (msg == "case 1") {
-    return "GET / HTTP/1.1\r\n\r\n";
+    return "GET / HTTP/1.1\r\n\r\n\r\n";
   } else if (msg == "case 2") {
     return "GET / HTTP/1.1\r\nHost: www.example.com\r\nConnection: keep-alive\r\n\r\n";
   }
-  return msg;
+  std::string changeMessage(msg);
+  size_t      idx;
+  while ((idx = changeMessage.find("\\r\\n")) != std::string::npos) {
+    changeMessage.replace(idx, 4, "\r\n");
+  }
+  return changeMessage;
 }
 
 int  Client::sendRequest(const std::string& msg) {
